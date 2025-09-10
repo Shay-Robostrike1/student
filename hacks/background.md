@@ -10,14 +10,18 @@ permalink: /background
 <canvas id="world"></canvas>
 
 <script>
+  // Setup canvas and drawing context
   const canvas = document.getElementById("world");
   const ctx = canvas.getContext('2d');
+
+  // Load images
   const backgroundImg = new Image();
   const spriteImg = new Image();
   backgroundImg.src = '{{page.background}}';
   spriteImg.src = '{{page.sprite}}';
 
   let imagesLoaded = 0;
+  // Wait until both images are loaded
   backgroundImg.onload = function() {
     imagesLoaded++;
     startGameWorld();
@@ -30,6 +34,7 @@ permalink: /background
   function startGameWorld() {
     if (imagesLoaded < 2) return;
 
+    // Base object for things that appear in the game
     class GameObject {
       constructor(image, width, height, x = 0, y = 0, speedRatio = 0) {
         this.image = image;
@@ -46,20 +51,23 @@ permalink: /background
       }
     }
 
+    // Background that scrolls horizontally
     class Background extends GameObject {
       constructor(image, gameWorld) {
-        // Fill entire canvas
+        // Fill the whole screen
         super(image, gameWorld.width, gameWorld.height, 0, 0, 0.1);
       }
       update() {
         this.x = (this.x - this.speed) % this.width;
       }
       draw(ctx) {
+        // Draw twice so background loops seamlessly
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
         ctx.drawImage(this.image, this.x + this.width, this.y, this.width, this.height);
       }
     }
 
+    // Player sprite that gently bobs up and down
     class Player extends GameObject {
       constructor(image, gameWorld) {
         const width = image.naturalWidth / 2;
@@ -76,6 +84,7 @@ permalink: /background
       }
     }
 
+    // Main world class that manages the game loop
     class GameWorld {
       static gameSpeed = 5;
       constructor(backgroundImg, spriteImg) {
@@ -85,18 +94,22 @@ permalink: /background
         this.height = window.innerHeight;
         this.canvas.width = this.width;
         this.canvas.height = this.height;
+
+        // Position canvas to cover the screen
         this.canvas.style.width = `${this.width}px`;
         this.canvas.style.height = `${this.height}px`;
         this.canvas.style.position = 'absolute';
         this.canvas.style.left = `0px`;
         this.canvas.style.top = `${(window.innerHeight - this.height) / 2}px`;
 
+        // Add objects to be updated and drawn each frame
         this.objects = [
          new Background(backgroundImg, this),
          new Player(spriteImg, this)
         ];
       }
       gameLoop() {
+        // Clear and redraw every frame
         this.ctx.clearRect(0, 0, this.width, this.height);
         for (const obj of this.objects) {
           obj.update();
@@ -109,6 +122,8 @@ permalink: /background
       }
     }
 
+    // Create and start the game
     const world = new GameWorld(backgroundImg, spriteImg);
     world.start();
   }
+</script>
