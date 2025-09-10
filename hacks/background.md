@@ -122,7 +122,7 @@ permalink: /background
       }
     }
 
-    // Create and start the game
+    // Create and start the game``````````````````````````````````````````````````
     const world = new GameWorld(backgroundImg, spriteImg);
     world.start();
   }
