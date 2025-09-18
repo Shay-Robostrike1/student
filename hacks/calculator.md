@@ -71,8 +71,8 @@ HTML implementation of the calculator.
       <!--row 4-->
       <div class="calculator-clear">A/C</div>
       <div class="calculator-number">0</div>
-      <div class="calculator-number">.</div>
-      <div class="calculator-equals">=</div>
+      <div class="calculator-operation">^</div>
+      <div class="calculator-operation">/</div>
       <!--row 5-->
       <div class="calculator-clear">A/C</div>
       <div class="calculator-number">0</div>
@@ -130,7 +130,8 @@ operations.forEach(button => {
 // Operator action
 function operation (choice) { // function to input operations into the calculator
     if (firstNumber == null) { // once the operation is chosen, the displayed number is stored into the variable firstNumber
-        firstNumber = parseInt(output.innerHTML);
+    // use parseFloat so decimal input is preserved (parseInt would drop decimals)
+    firstNumber = parseFloat(output.innerHTML);
         nextReady = true;
         operator = choice;
         return; // exits function
@@ -158,6 +159,10 @@ function calculate (first, second) { // function to calculate the result of the 
         case "/":
             result = first / second;
             break;
+        case "^":
+        // in JavaScript '^' is bitwise XOR. For exponentiation use Math.pow or **
+        result = Math.pow(first, second);
+           break;
         default: 
             break;
     }
