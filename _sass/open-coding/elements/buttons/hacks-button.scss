@@ -4,7 +4,7 @@
     width: auto;
     height: auto;
     border-radius: 10px;
-    background-color: #21807c;
+    background-color: #112671;
     border: 3px solid black;
     font-size: 1.5em;
 
@@ -50,7 +50,7 @@
   
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* fr is a special unit; learn more here: https://css-tricks.com/introduction-fr-css-unit/  */
-    grid-template-rows: 0.5fr repeat(5, 1fr);
+    grid-template-rows: 0.5fr repeat(5what , 1fr);
     gap: 10px 10px;
   }
   
@@ -74,12 +74,12 @@
   /* styling for the calculator clear button */
   .calculator-clear {
     @extend .button;
-    background-color: #e68b1c;
+    background-color: #58012e;
   }
   
   /* styling for the calculator equals button */
   .calculator-equals {
     @extend .button;
-    background-color: #e70f0f;
+    background-color: #003a09;
   }
 
