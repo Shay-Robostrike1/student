@@ -68,16 +68,16 @@ HTML implementation of the calculator.
       <div class="calculator-number">8</div>
       <div class="calculator-number">9</div>
       <div class="calculator-operation">*</div>
-      <!--row 4-->
-      <div class="calculator-clear">A/C</div>
-      <div class="calculator-number">0</div>
-      <div class="calculator-operation">^</div>
-      <div class="calculator-operation">/</div>
-      <!--row 5-->
-      <div class="calculator-clear">A/C</div>
+  <!--row 4-->
+  <div class="calculator-sqrt calculator-operation">√</div>
       <div class="calculator-number">0</div>
       <div class="calculator-number">.</div>
-      <div class="calculator-equals">=</div>
+      <div class="calculator-operation">/</div>
+      <!--row 5-->
+      <div class="calculator-operation">^</div>
+    <div class="calculator-clear">A/C</div>
+     <div class="calculator-equals">=</div>
+    <div class="calculator-sign calculator-operation">±</div>
   </div>
 </div>
 
@@ -93,6 +93,9 @@ const numbers = document.querySelectorAll(".calculator-number");
 const operations = document.querySelectorAll(".calculator-operation");
 const clear = document.querySelectorAll(".calculator-clear");
 const equals = document.querySelectorAll(".calculator-equals");
+// JS-only square-root hook: any element given this class will act as the sqrt button
+const sqrts = document.querySelectorAll(".calculator-sqrt");
+const signs = document.querySelectorAll(".calculator-sign");
 
 // Number buttons listener
 numbers.forEach(button => {
@@ -123,6 +126,8 @@ function number (value) { // function to input numbers into the calculator
 // Operation buttons listener
 operations.forEach(button => {
   button.addEventListener("click", function() {
+    // if this operation element is actually the sqrt control, ignore here
+    if (button.classList && button.classList.contains('calculator-sqrt')) return;
     operation(button.textContent);
   });
 });
@@ -175,6 +180,41 @@ equals.forEach(button => {
     equal();
   });
 });
+
+// Square-root listener (elements may be added in HTML later; this just wires the class)
+sqrts.forEach(button => {
+  button.addEventListener("click", function() {
+    handleSqrt();
+  });
+});
+
+// Sign toggle listener (±)
+signs.forEach(button => {
+  button.addEventListener("click", function() {
+    let cur = output.innerHTML;
+    if (cur === "NaN") return;
+    if (cur.charAt(0) === "-") {
+      // remove leading minus
+      cur = cur.slice(1);
+      output.innerHTML = cur === "" ? "0" : cur;
+    } else {
+      output.innerHTML = "-" + cur;
+    }
+    // user has modified the current value
+    nextReady = false;
+  });
+});
+
+// Square-root handler
+function handleSqrt() {
+  const current = parseFloat(output.innerHTML);
+  const result = Math.sqrt(current);
+  output.innerHTML = isNaN(result) ? "NaN" : result.toString();
+  // reset stored operator/state so it's consistent with unary behavior
+  firstNumber = null;
+  operator = null;
+  nextReady = true;
+}
 
 // Equal action
 function equal () { // function used when the equals button is clicked; calculates equation and displays it
